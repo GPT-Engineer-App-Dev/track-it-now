@@ -1,14 +1,15 @@
 import React, { useState } from "react";
-import { Container, VStack, HStack, Input, Button, IconButton, Text, Checkbox, Box } from "@chakra-ui/react";
+import { Container, VStack, HStack, Input, Button, IconButton, Text, Checkbox, Box, Select } from "@chakra-ui/react";
 import { FaTrash } from "react-icons/fa";
 
 const Index = () => {
   const [todos, setTodos] = useState([]);
   const [inputValue, setInputValue] = useState("");
+  const [category, setCategory] = useState("Work");
 
   const addTodo = () => {
     if (inputValue.trim() !== "") {
-      setTodos([...todos, { text: inputValue, completed: false }]);
+      setTodos([...todos, { text: inputValue, completed: false, category }]);
       setInputValue("");
     }
   };
@@ -26,7 +27,11 @@ const Index = () => {
   return (
     <Container centerContent maxW="container.md" height="100vh" display="flex" flexDirection="column" justifyContent="center" alignItems="center">
       <VStack spacing={4} width="100%">
-        <HStack width="100%">
+        <HStack width="100%" spacing={2}>
+          <Select value={category} onChange={(e) => setCategory(e.target.value)}>
+            <option value="Work">Work</option>
+            <option value="Personal">Personal</option>
+          </Select>
           <Input placeholder="Add a new task" value={inputValue} onChange={(e) => setInputValue(e.target.value)} />
           <Button onClick={addTodo} colorScheme="teal">
             Add
@@ -36,7 +41,9 @@ const Index = () => {
           {todos.map((todo, index) => (
             <HStack key={index} width="100%" justifyContent="space-between" p={2} borderWidth="1px" borderRadius="md">
               <Checkbox isChecked={todo.completed} onChange={() => toggleTodo(index)}>
-                <Text as={todo.completed ? "s" : ""}>{todo.text}</Text>
+                <Text as={todo.completed ? "s" : ""}>
+                  {todo.text} ({todo.category})
+                </Text>
               </Checkbox>
               <IconButton aria-label="Delete task" icon={<FaTrash />} onClick={() => deleteTodo(index)} />
             </HStack>
